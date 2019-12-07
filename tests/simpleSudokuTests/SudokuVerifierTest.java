@@ -25,14 +25,14 @@ public class SudokuVerifierTest {
 	}
 	
 	@Test
-	public void testVerify_LESSTHAN81DIGITS() {
+	public void testVerify_LessThan81Digits() {
 		SudokuVerifier sv = new SudokuVerifier();
 		int test = sv.verify("123456789");
 		assertEquals(-5, test);
 	}
 	
 	@Test
-	public void testVerify_MORETHAN81DIGITS() {
+	public void testVerify_MoreThan81Digits() {
 		SudokuVerifier sv = new SudokuVerifier();
 		int test = sv.verify("123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789");
 		assertEquals(-5, test);
