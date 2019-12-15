@@ -164,4 +164,75 @@ public class SudokuGrid {
 		}
 	}
 	
+	/* specifics */
+
+	public boolean isEmptyAt(int collumn, int row) throws IllegalArgumentException{
+		try {
+			isValidDigit(collumn, "collumn coordinates");
+			isValidDigit(row, "row coordinates");
+			return grid[collumn][row] == 0;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	public int[] getRowOf(int collumn, int row) throws IllegalArgumentException{
+		try {
+			isValidDigit(collumn, "collumn coordinates");
+			isValidDigit(row, "row coordinates");
+			// get values:
+			int[] res = new int[SIZE];
+			// iterate over the row:
+			for (int i=0; i<SIZE; i++) {
+				res[i] = grid[i][collumn];
+			}
+			return res;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	public int[] getCollumnOf(int collumn, int row) throws IllegalArgumentException{
+		try {
+			isValidDigit(collumn, "collumn coordinates");
+			isValidDigit(row, "row coordinates");
+			// get values:
+			return grid[collumn];
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	public int[][] getSquareOf(int collumn, int row) throws IllegalArgumentException{
+		try {
+			isValidDigit(collumn, "collumn coordinates");
+			isValidDigit(row, "row coordinates");
+			// get values:
+			int[][] res = new int[SIZE/3][SIZE/3];
+			// identify the subgrid:
+			int squareRow = row/(SIZE/3); 
+			int squareCollumn = collumn/(SIZE/3);
+			// indexes for parsing the result matrix:
+			int x = -1;
+			int y = -1;
+			// construct the appropriate subgrid:
+			for (int i=squareRow*(SIZE/3); i<squareRow*(SIZE/3)+3; i++) {
+				// update index
+				x+=1;
+				y=-1;
+				for(int j=squareCollumn*(SIZE/3); j<squareCollumn*(SIZE/3)+3; j++) {
+					// update index:
+					y+=1;
+					res[x][y] = grid[i][j];
+				}
+			}
+			return res;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
 }
