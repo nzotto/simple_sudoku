@@ -1,5 +1,6 @@
 package simpleSudoku;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -8,25 +9,54 @@ import java.util.Objects;
 
 public class SudokuSolver {
 
-	SudokuGrid grid;
+	private SolvingStrategy strat;
+	private SudokuGrid grid;
 	static int SIZE = 9;
 	static Integer[] legalValues = new Integer[] {1,2,3,4,5,6,7,8,9};
-	public Map<Coords,List> pencilMap;
+	public List<EmptyCoords> pencil;
+	
+	/**
+	 * Constructor
+	 * @param grid, the sudoku grid we wish to solve.
+	 * @param strat, a solving strategy. Used to determine which solving algorythm will be used.
+	 */
+	public SudokuSolver(SudokuGrid grid, SolvingStrategy strat) {
+		// assign elements:
+		this.grid = grid;
+		this.pencil = new ArrayList<EmptyCoords> ();
+		this.strat = strat;
+	}
 	
 	/**
 	 * Constructor
 	 * @param grid, the sudoku grid we wish to solve.
 	 */
 	public SudokuSolver(SudokuGrid grid) {
+		// assign elements:
 		this.grid = grid;
-		this.pencilMap = new HashMap<Coords, List>();
+		this.pencil = new ArrayList<EmptyCoords> ();
+		this.strat = SolvingStrategy.PROBA;
+	}
+	
+	public void run() {
+		// annotate all possible values at each empty coordinate:
+		createPencilMarks();
+		// for each empty coordinate:
+		for (EmptyCoords el: pencil) {
+			if (el.values.size() == 1) {
+				grid.setValue(el.x, el.y, el.values.get(0));
+			}
+			else {
+				// TODO: select algorithm
+			}
+		}
 	}
 	
 	/**
 	 * Creates the pencil annotation of the grid.
 	 * ie. For each empty space on the grid, determine all possible numbers that could fit.
 	 */
-	public void createPencilMap() {
+	private void createPencilMarks() {
 		// parse the grid:
 		for (int collumn = 0; collumn < SIZE; collumn++) {
 			for (int row = 0; row < SIZE; row++) {
@@ -37,7 +67,7 @@ public class SudokuSolver {
 					int[] parentCollumn = grid.getCollumnOf(collumn, row);
 					int[][] parentquare = grid.getSquareOf(collumn, row);
 					// list missing values:
-					List<Integer> values = Arrays.asList(legalValues);
+					List<Integer> values = new ArrayList<Integer>(Arrays.asList(legalValues));
 					for (int index=0; index<SIZE; index++) {
 						if( values.contains((Integer) parentRow[index])) {
 							values.remove((Integer) parentRow[index]);
@@ -53,33 +83,40 @@ public class SudokuSolver {
 							}
 						}
 					}
-					// add to map:
-					pencilMap.put(new Coords<Integer,Integer>(collumn, row), values);
+					// create object and add to container:
+					pencil.add(new EmptyCoords(collumn, row, values));
 				}
 			}
 		}
 	}
 	
+	public SudokuGrid getGrid() {
+		return this.grid;
+	}
+	
 	/**
-	 * Private subclass used for Hashing coordinates of the sudoku grid.
+	 * Private subclass used for representing empty coordinates of the sudoku grid.
 	 * 
 	 * @author Zotto
 	 *
-	 * @param <X> int, collumn coordinate.
-	 * @param <Y> int, row coordinate.
+	 * @param x: int, collumn coordinate.
+	 * @param y: int, row coordinate.
+	 * @param values: List<Integer>, the possible values at a given coordinate.
 	 */
-	private class Coords<X, Y> { 
-		public final X x; 
-		public final Y y; 
+	private class EmptyCoords {
+		public final int x; 
+		public final int y; 
+		public final List<Integer> values;
 		
-		public Coords(X x, Y y) { 
+		public EmptyCoords(int x, int y, List<Integer> values) { 
 			this.x = x; 
 			this.y = y; 
+			this.values = values;
 		}		 
 		
 		@Override
 	    public String toString() {
-	        return "(" + x + "," + y + ")";
+	        return "(" + x + "," + y + ") -> "+values.toString();
 	    }
 		
 		@Override
@@ -87,20 +124,21 @@ public class SudokuSolver {
 			if (other == this) {
 				return true;
 			}
-			if (!(other instanceof Coords)){
+			if (!(other instanceof EmptyCoords)){
 				return false;
 			}
 			// type conversion:
-			Coords<X,Y> candidate = (Coords<X,Y>) other;
-			return Objects.equals(this.x, candidate.x) && Objects.equals(this.y, candidate.y);
+			EmptyCoords candidate = (EmptyCoords) other;
+			return Objects.equals(this.x, candidate.x) && Objects.equals(this.y, candidate.y) && Objects.equals(this.values, candidate.values);
 		}
 		
 		@Override
 	    public int hashCode() {
 	        final int offset = 7;
 	        int result = 1;
-	        result = offset * result + x.hashCode();
-	        result = offset * result + y.hashCode();
+	        result = offset * result + ((Integer) x).hashCode();
+	        result = offset * result + ((Integer) y).hashCode();
+	        result = offset * result + values.hashCode();
 	        return result;
 	    }
 	}
