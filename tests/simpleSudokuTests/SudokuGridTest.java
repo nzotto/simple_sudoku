@@ -189,26 +189,36 @@ public class SudokuGridTest {
 	/*Test specifics*/
 	@Test
 	public void Sudokugrid_isEmptyAt() {
-		int[][] matrix = new int[9][9];
-		for (int i=0; i<9; i++) {
-			Arrays.fill(matrix[i], i);
-		}
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417360825"
+				+ "632158947"
+				+ "958724316"
+				+ "825437169"
+				+ "791586032"
+				+ "346912758"
+				+ "289643571"
+				+ "573290684"
+				+ "164875293");
 		
-		SudokuGrid grid = new SudokuGrid(matrix);
 		
 		assertFalse(grid.isEmptyAt(5, 5));
 	}
 	
 	@Test
 	public void Sudokugrid_isEmptyAtBis() {
-		int[][] matrix = new int[9][9];
-		for (int i=0; i<9; i++) {
-			Arrays.fill(matrix[i], i);
-		}
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417360825"
+				+ "632158947"
+				+ "958724316"
+				+ "825437169"
+				+ "791586032"
+				+ "346912758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293");
 		
-		SudokuGrid grid = new SudokuGrid(matrix);
 		
-		assertTrue(grid.isEmptyAt(0, 0));
+		assertTrue(grid.isEmptyAt(5, 0));
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -239,14 +249,18 @@ public class SudokuGridTest {
 	
 	@Test
 	public void Sudokugrid_getRowOf() {
-		int[][] matrix = new int[9][9];
-		for (int i=0; i<9; i++) {
-			Arrays.fill(matrix[i], i);
-		}
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417360825"
+				+ "632158947"
+				+ "958724316"
+				+ "825437169"
+				+ "791586032"
+				+ "346912758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293");
 		
-		SudokuGrid grid = new SudokuGrid(matrix);
-		
-		assertArrayEquals(grid.getRowOf(0, 0), new int[] {0,1,2,3,4,5,6,7,8});
+		assertArrayEquals(grid.getRowOf(1, 2), new int[] {9,5,8,7,2,4,3,1,6});
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -277,14 +291,18 @@ public class SudokuGridTest {
 	
 	@Test
 	public void Sudokugrid_getCollumnOf() {
-		int[][] matrix = new int[9][9];
-		for (int i=0; i<9; i++) {
-			Arrays.fill(matrix[i], i);
-		}
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417360825"
+				+ "632158947"
+				+ "958724316"
+				+ "825437169"
+				+ "791586032"
+				+ "346912758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293");
 		
-		SudokuGrid grid = new SudokuGrid(matrix);
-		
-		assertArrayEquals(grid.getCollumnOf(0, 0), new int[] {0,0,0,0,0,0,0,0,0});
+		assertArrayEquals(grid.getCollumnOf(1, 3), new int[] {1,3,5,2,9,4,8,7,6});
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -315,13 +333,18 @@ public class SudokuGridTest {
 	
 	@Test
 	public void Sudokugrid_getSquareOf() {
-		int[][] matrix = new int[9][9];
-		for (int i=0; i<9; i++) {
-			Arrays.fill(matrix[i], i);
-		}
-		SudokuGrid grid = new SudokuGrid(matrix);
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417360825"
+				+ "632158947"
+				+ "958724316"
+				+ "825437169"
+				+ "791586032"
+				+ "346912758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293");
 
-		assertArrayEquals(grid.getSquareOf(5, 5), new int[][] {{3,3,3},{4,4,4},{5,5,5}});
+		assertArrayEquals(grid.getSquareOf(7, 8), new int[][] {{5,7,1},{6,8,4},{2,9,3}});
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

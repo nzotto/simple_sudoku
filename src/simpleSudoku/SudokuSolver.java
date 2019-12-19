@@ -2,10 +2,9 @@ package simpleSudoku;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class SudokuSolver {
 
@@ -13,10 +12,11 @@ public class SudokuSolver {
 	private SudokuGrid grid;
 	static int SIZE = 9;
 	static Integer[] legalValues = new Integer[] {1,2,3,4,5,6,7,8,9};
-	public List<EmptyCoords> pencil;
+	private List<EmptyCoords> pencil;
+	private SudokuVerifier verificator;
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param grid, the sudoku grid we wish to solve.
 	 * @param strat, a solving strategy. Used to determine which solving algorythm will be used.
 	 */
@@ -25,31 +25,96 @@ public class SudokuSolver {
 		this.grid = grid;
 		this.pencil = new ArrayList<EmptyCoords> ();
 		this.strat = strat;
+		this.verificator = new SudokuVerifier();
 	}
 	
 	/**
-	 * Constructor
+	 * Constructor.
+	 * The solving strategy defaults to the probabilistic one.
 	 * @param grid, the sudoku grid we wish to solve.
 	 */
 	public SudokuSolver(SudokuGrid grid) {
 		// assign elements:
 		this.grid = grid;
 		this.pencil = new ArrayList<EmptyCoords> ();
-		this.strat = SolvingStrategy.PROBA;
+		this.verificator = new SudokuVerifier();
+		this.strat = SolvingStrategy.PROBABILISTIC;
 	}
 	
 	public void run() {
 		// annotate all possible values at each empty coordinate:
 		createPencilMarks();
-		// for each empty coordinate:
+		// fill coordinates with only one answer:
 		for (EmptyCoords el: pencil) {
+			
+			System.out.println(el);
+			
 			if (el.values.size() == 1) {
 				grid.setValue(el.x, el.y, el.values.get(0));
 			}
-			else {
-				// TODO: select algorithm
+		}
+		// solve ambiguity with the selected algorithm:
+		switch (this.strat) {
+			case PROBABILISTIC:
+				stochasticSearch();
+				break;
+			case BRUTE:
+				depthSearch();
+				break;
+			case OCCUPANCY:
+				occupancyTheorem();
+				break;
+		}
+	}
+	
+	/**
+	 * src: http://pi.math.cornell.edu/~mec/Summer2009/meerkamp/Site/Solving_any_Sudoku_II.html
+	 */
+	private void occupancyTheorem() {
+		for (EmptyCoords el: pencil) {
+			// TODO
+		}
+	}
+	
+	/**
+	 * Try every possible combinations possible until the grid is valid.
+	 */
+	private void depthSearch() {
+		for (EmptyCoords el: pencil) {
+			// TODO
+		}
+	}
+	
+	/**
+	 * Try random combinations until the grid is valid.
+	 */
+	private void stochasticSearch() {
+		// initialize:
+		Random prand = new Random();
+		boolean flag = true;
+		SudokuGrid candidate = null;
+		// until we found a solution:
+		while (flag) {
+			// create a copy of the grid:
+			candidate = new SudokuGrid(this.grid);
+			// for each empty cell:
+			for (EmptyCoords el: pencil) {
+				
+				System.out.println(el);
+				
+				// pick a random candidate:
+				int selectedValue = el.values.get(prand.nextInt(el.values.size()));
+				// assign it to the candidate solution:
+				candidate.setValue(el.x, el.y, selectedValue);
+			}
+			// check validity of the candidate solution:
+			if (verificator.verify(candidate.toString()) == 0) {
+				// we have found a valid solution to the sudoku grid.
+				flag = false;
 			}
 		}
+		// replace the grid by the solved grid:
+		this.grid = candidate;
 	}
 	
 	/**
@@ -58,16 +123,27 @@ public class SudokuSolver {
 	 */
 	private void createPencilMarks() {
 		// parse the grid:
-		for (int collumn = 0; collumn < SIZE; collumn++) {
-			for (int row = 0; row < SIZE; row++) {
+		for (int row = 0; row < SIZE; row++) {
+			for (int collumn = 0; collumn < SIZE; collumn++) {
 				// if the cell is empty:
 				if (grid.isEmptyAt(collumn, row)) {
+					
+					System.out.println("at coord: "+collumn+", "+row);
+					
 					// get relevant information:
 					int[] parentRow = grid.getRowOf(collumn, row);
 					int[] parentCollumn = grid.getCollumnOf(collumn, row);
-					int[][] parentquare = grid.getSquareOf(collumn, row);
+					int[][] parentSquare = grid.getSquareOf(collumn, row);
+					
+					System.out.println("parentRow: "+Arrays.toString(parentRow));
+					System.out.println("parentCollumn: "+Arrays.toString(parentCollumn));
+					System.out.println("parentSquare: "+Arrays.deepToString(parentSquare));
+					
 					// list missing values:
 					List<Integer> values = new ArrayList<Integer>(Arrays.asList(legalValues));
+					
+					System.out.println("values before -> "+values);
+					
 					for (int index=0; index<SIZE; index++) {
 						if( values.contains((Integer) parentRow[index])) {
 							values.remove((Integer) parentRow[index]);
@@ -78,11 +154,14 @@ public class SudokuSolver {
 					}
 					for (int x=0; x<SIZE/3; x++) {
 						for (int y=0; y<SIZE/3; y++) {
-							if( values.contains((Integer) parentquare[x][y])) {
-								values.remove((Integer) parentquare[x][y]);
+							if( values.contains((Integer) parentSquare[x][y])) {
+								values.remove((Integer) parentSquare[x][y]);
 							}
 						}
 					}
+					
+					System.out.println("values after -> "+values);
+					
 					// create object and add to container:
 					pencil.add(new EmptyCoords(collumn, row, values));
 				}
@@ -132,6 +211,7 @@ public class SudokuSolver {
 			return Objects.equals(this.x, candidate.x) && Objects.equals(this.y, candidate.y) && Objects.equals(this.values, candidate.values);
 		}
 		
+		/*
 		@Override
 	    public int hashCode() {
 	        final int offset = 7;
@@ -141,5 +221,6 @@ public class SudokuSolver {
 	        result = offset * result + values.hashCode();
 	        return result;
 	    }
+		*/
 	}
 }

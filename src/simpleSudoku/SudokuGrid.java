@@ -1,5 +1,8 @@
 package simpleSudoku;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class SudokuGrid {
 
 	static int SIZE = 9;
@@ -42,6 +45,14 @@ public class SudokuGrid {
 			throw e
 			;
 		}
+	}
+	
+	/**
+	 * Copy constructor.
+	 * @return
+	 */
+	public SudokuGrid (SudokuGrid target) {
+		this.grid = target.grid;
 	}
 	
 	/* Type conversion functions */
@@ -144,7 +155,7 @@ public class SudokuGrid {
 		try {
 			isValidDigit(collumn, "collumn coordinates");
 			isValidDigit(row, "row coordinates");
-			return grid[collumn][row];
+			return grid[row][collumn];
 		}
 		catch(Exception e) {
 			throw e;
@@ -157,27 +168,27 @@ public class SudokuGrid {
 			isValidDigit(collumn, "collumn coordinates");
 			isValidDigit(row, "row coordinates");
 			isValidDigit(input, "intput coordinates");
-			grid[collumn][row] = input;
+			grid[row][collumn] = input;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
 	
-	/* specifics */
+	/* Specifics */
 
 	public boolean isEmptyAt(int collumn, int row) throws IllegalArgumentException{
 		try {
 			isValidDigit(collumn, "collumn coordinates");
 			isValidDigit(row, "row coordinates");
-			return grid[collumn][row] == 0;
+			return grid[row][collumn] == 0;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
 	
-	public int[] getRowOf(int collumn, int row) throws IllegalArgumentException{
+	public int[] getCollumnOf(int collumn, int row) throws IllegalArgumentException{
 		try {
 			isValidDigit(collumn, "collumn coordinates");
 			isValidDigit(row, "row coordinates");
@@ -194,12 +205,12 @@ public class SudokuGrid {
 		}
 	}
 	
-	public int[] getCollumnOf(int collumn, int row) throws IllegalArgumentException{
+	public int[] getRowOf(int collumn, int row) throws IllegalArgumentException{
 		try {
 			isValidDigit(collumn, "collumn coordinates");
 			isValidDigit(row, "row coordinates");
 			// get values:
-			return grid[collumn];
+			return grid[row];
 		}
 		catch(Exception e) {
 			throw e;
@@ -234,5 +245,20 @@ public class SudokuGrid {
 		catch(Exception e) {
 			throw e;
 		}
+	}
+	
+	/* Overwriten functionalities */
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof SudokuGrid)){
+			return false;
+		}
+		// type conversion:
+		SudokuGrid candidate = (SudokuGrid) other;
+		return Arrays.equals(this.grid, candidate.grid);
 	}
 }
