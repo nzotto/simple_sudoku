@@ -372,4 +372,27 @@ public class SudokuGridTest {
 		
 		grid.getSquareOf(5, -5);
 	}
+	
+	/* */
+	
+	@Test
+	public void Sudokugrid_TestEquals() {
+		String str = "417369825632158947958724316825437169791586032346912758289643571573291684164875293";
+		
+		SudokuGrid grid1 = new SudokuGrid(str);
+		SudokuGrid grid2 = new SudokuGrid(str);
+		
+		assertEquals(grid1, grid2);
+	}
+	
+	@Test
+	public void Sudokugrid_TestEqualsBis() {
+		String str1 = "417369825632158947958724316825437169791586032346912758289643571573291684164875293";
+		String str2 = "000369825632158947958724316825437169791586032346912758289643571573291684164875293";
+		
+		SudokuGrid grid1 = new SudokuGrid(str1);
+		SudokuGrid grid2 = new SudokuGrid(str2);
+		
+		assertNotEquals(grid1, grid2);
+	}
 }

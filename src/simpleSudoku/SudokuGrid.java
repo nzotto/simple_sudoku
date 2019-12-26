@@ -52,6 +52,8 @@ public class SudokuGrid {
 	 * @return
 	 */
 	public SudokuGrid (SudokuGrid target) {
+		// TODO: doesn't work!
+		// The grid is passed by pointer not value.
 		this.grid = target.grid;
 	}
 	
@@ -247,7 +249,7 @@ public class SudokuGrid {
 		}
 	}
 	
-	/* Overwriten functionalities */
+	/* Overwriten functions */
 	
 	@Override
 	public boolean equals(Object other) {
@@ -259,6 +261,8 @@ public class SudokuGrid {
 		}
 		// type conversion:
 		SudokuGrid candidate = (SudokuGrid) other;
-		return Arrays.equals(this.grid, candidate.grid);
+		
+		//return Arrays.equals(this.grid, candidate.grid);
+		return this.toString().equals(candidate.toString()); // TODO: POURQUOI?
 	}
 }

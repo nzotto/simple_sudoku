@@ -4,15 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import simpleSudoku.SolvingStrategy;
 import simpleSudoku.SudokuGrid;
 import simpleSudoku.SudokuSolver;
 
 public class SudokuSolverParametrizedTest {
 	// correct solution: 417369825632158947958724316825437169791586432346912758289643571573291684164875293
 	
-	/* test simple cases */
+	/* Test simple cases ... */
+	
+	/* ... use probabilistic strategy */
 	@Test
-	public void SudokuSolver_OneMissingValue() {
+	public void SudokuSolver_OneMissingValueProbabilistic() {
 		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
 		SudokuGrid grid = new SudokuGrid(""
 				+ "417369825"
@@ -25,26 +28,41 @@ public class SudokuSolverParametrizedTest {
 				+ "573291684"
 				+ "164875293"); //1 value missing: 5 at 1,2
 		
-		SudokuSolver solver = new SudokuSolver(grid);
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.PROBABILISTIC);
 		solver.run();
-		
-		System.out.println();
-		System.out.println(solution.toString());
-		System.out.println(solver.getGrid().toString());
-		
-		
 		
 		// the grid is properly solved: 
 		assertEquals(solution, solver.getGrid());
 	}
 	
 	@Test
-	public void SudokuSolver_DependentValues() {
-		// TODO
+	public void SudokuSolver_MissingSquareProbabilistic() {
+		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417369825"
+				+ "632158947"
+				+ "958724316"
+				+ "825000169"
+				+ "791000432"
+				+ "346000758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293"); 
+		/* 1 square missing:
+		 * 437
+		 * 586
+		 * 912
+		 */
+		
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.PROBABILISTIC);
+		solver.run();
+		
+		// the grid is properly solved: 
+		assertEquals(solution, solver.getGrid());
 	}
 	
 	@Test
-	public void SudokuSolver_SameRow() {
+	public void SudokuSolver_SameRowProbabilistic() {
 		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
 		SudokuGrid grid = new SudokuGrid(""
 				+ "417369825"
@@ -63,21 +81,15 @@ public class SudokuSolverParametrizedTest {
 		 * - 2 at 4,2
 		 */
 		
-		SudokuSolver solver = new SudokuSolver(grid);
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.PROBABILISTIC);
 		solver.run();
-		
-		System.out.println();
-		System.out.println(solution.toString());
-		System.out.println(solver.getGrid().toString());
-		
-		
 		
 		// the grid is properly solved: 
 		assertEquals(solution, solver.getGrid());
 	}
 	
 	@Test
-	public void SudokuSolver_SameCollumn() {
+	public void SudokuSolver_SameCollumnProbabilistic() {
 		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
 		SudokuGrid grid = new SudokuGrid(""
 				+ "417369825"
@@ -95,21 +107,15 @@ public class SudokuSolverParametrizedTest {
 		 * - 6 at 1,8
 		 */
 		
-		SudokuSolver solver = new SudokuSolver(grid);
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.PROBABILISTIC);
 		solver.run();
-		
-		System.out.println();
-		System.out.println(solution.toString());
-		System.out.println(solver.getGrid().toString());
-		
-		
 		
 		// the grid is properly solved: 
 		assertEquals(solution, solver.getGrid());
 	}
 	
 	@Test
-	public void SudokuSolver_SameSquare() {
+	public void SudokuSolver_SameSquareProbabilistic() {
 		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
 		SudokuGrid grid = new SudokuGrid(""
 				+ "417369825"
@@ -128,14 +134,56 @@ public class SudokuSolverParametrizedTest {
 		 * - 3 at 8,8
 		 */
 		
-		SudokuSolver solver = new SudokuSolver(grid);
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.PROBABILISTIC);
 		solver.run();
 		
-		System.out.println();
-		System.out.println(solution.toString());
-		System.out.println(solver.getGrid().toString());
+		// the grid is properly solved: 
+		assertEquals(solution, solver.getGrid());
+	}
+	
+	/* ... use smart strategy */
+	@Test
+	public void SudokuSolver_OneMissingValueSmart() {
+		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417369825"
+				+ "632158947"
+				+ "908724316"
+				+ "825437169"
+				+ "791586432"
+				+ "346912758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293"); //1 value missing: 5 at 1,2
 		
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.SMART);
+		solver.run();
 		
+		// the grid is properly solved: 
+		assertEquals(solution, solver.getGrid());
+	}
+	
+	@Test
+	public void SudokuSolver_MissingSquareSmart() {
+		SudokuGrid solution = new SudokuGrid("417369825632158947958724316825437169791586432346912758289643571573291684164875293");
+		SudokuGrid grid = new SudokuGrid(""
+				+ "417369825"
+				+ "632158947"
+				+ "958724316"
+				+ "825000169"
+				+ "791000432"
+				+ "346000758"
+				+ "289643571"
+				+ "573291684"
+				+ "164875293"); 
+		/* 1 square missing:
+		 * 437
+		 * 586
+		 * 912
+		 */
+		
+		SudokuSolver solver = new SudokuSolver(grid, SolvingStrategy.SMART);
+		solver.run();
 		
 		// the grid is properly solved: 
 		assertEquals(solution, solver.getGrid());
