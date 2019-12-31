@@ -1,5 +1,7 @@
 # Simple sudoku
 
+[![CircleCI](https://circleci.com/gh/nzotto/simple_sudoku.svg?style=svg)](https://circleci.com/gh/nzotto/simple_sudoku)
+
 University of Lille - Master Data Science
 Refresher in Computer Science - Project 2
 
