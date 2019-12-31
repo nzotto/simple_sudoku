@@ -1,3 +1,0 @@
-module simpleSudoku {
-	requires junit;
-}
